@@ -1,0 +1,15 @@
+{
+    "kilitlenmeBaslangicZamani": {
+    "saat": 11,
+    "dakika": 40,
+    "saniye": 51,
+    "milisaniye": 478
+    },
+    "kilitlenmeBitisZamani": {
+    "saat": 11,
+    "dakika": 41,
+    "saniye": 3,
+    "milisaniye": 141
+    },
+    "otonom_kilitlenme": 1
+}

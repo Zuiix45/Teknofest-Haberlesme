@@ -1,0 +1,23 @@
+{
+    "takim_numarasi": 1,
+    "iha_enlem": 41.508775,
+    "iha_boylam": 36.118335,
+    "iha_irtifa": 38,
+    "iha_dikilme": 7,
+    "iha_yonelme": 210,
+    "iha_yatis": -30,
+    "iha_hiz": 28,
+    "iha_batarya": 50,
+    "iha_otonom": 1,
+    "iha_kilitlenme": 1,
+    "hedef_merkez_X": 300,
+    "hedef_merkez_Y": 230,
+    "hedef_genislik": 30,
+    "hedef_yukseklik": 43,
+    "gps_saati": {
+        "saat": 11,
+        "dakika": 38,
+        "saniye": 37,
+        "milisaniye": 654
+    }
+}
