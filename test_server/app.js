@@ -4,6 +4,9 @@ const stableStringify = require('json-stable-stringify');
 const app = express();
 const fs = require('fs');
 
+IP = "0.0.0.0"
+PORT = 5000
+
 JSON_SPACING = 4;
 
 SERVER_CLOCK_JSON_PATH = "../example_data/server_clock.json";
@@ -90,6 +93,6 @@ app.get('/api/qr_koordinati', (req, res) => {
 });
 
 // Start the server
-app.listen(5000, () => {
-    console.log('Server is running on port 5000');
+app.listen(PORT, IP, () => {
+    console.log("Server is running on", IP + ":" + PORT);
 });

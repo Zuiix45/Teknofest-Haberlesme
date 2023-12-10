@@ -1,9 +1,6 @@
 
 import json
 import requests
-import threading
-
-from sympy import true
 
 class Client:
     """
@@ -152,7 +149,7 @@ class Client:
         with open(file_path, "r") as file:
             return json.load(file)
         
-    def setTelemetryInfo(self, telemetry_info: dict):
+    def set_telemetryInfo(self, telemetry_info: dict):
         """
         Sets the telemetry information to be sent to the competition server.
 
@@ -161,7 +158,7 @@ class Client:
         """
         self.__telemetry_info = telemetry_info
 
-    def setLockingInfo(self, locking_info: dict):
+    def set_lockingInfo(self, locking_info: dict):
         """
         Sets the locking information to be sent to the competition server.
 
@@ -170,7 +167,7 @@ class Client:
         """
         self.__locking_info = locking_info
         
-    def setKamikazeInfo(self, kamikaze_info: dict):
+    def set_kamikazeInfo(self, kamikaze_info: dict):
         """
         Sets the kamikaze information to be sent to the competition server.
 
@@ -179,7 +176,7 @@ class Client:
         """
         self.__kamikaze_info = kamikaze_info
     
-    def getServerClock(self):
+    def get_serverClock(self):
         """
         Returns the server clock information.
 
@@ -188,7 +185,7 @@ class Client:
         """
         return self.__serverClock
     
-    def getOthersTelemetryInfo(self):
+    def get_othersTelemetryInfo(self):
         """
         Returns the telemetry information of other teams.
 
@@ -197,7 +194,7 @@ class Client:
         """
         return self.__others_telemetry_info
     
-    def getTeamNum(self):
+    def get_teamNum(self):
         """
         Returns the team number.
 
@@ -206,7 +203,7 @@ class Client:
         """
         return self.__team_num
     
-    def getQRCoords(self):
+    def get_QRCoords(self):
         """
         Returns the QR coordinates.
 
@@ -215,7 +212,7 @@ class Client:
         """
         return self.__qrCoords
     
-    def getStatusCode(self, index: int = -1):
+    def get_statusCode(self, index: int = -1):
         """
         Returns the status code of specified index. If no index is provided, the status code of the last request will be returned.
         
