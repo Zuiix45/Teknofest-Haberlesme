@@ -1,12 +1,14 @@
 
 import json
+import os
+import threading
 import requests
 
 class Client:
     """
     A class to communicate with the competition server.
     """
-    def __init__(self, team_username: str, password: str, server_url="http://localhost:5000"):
+    def __init__(self, team_username: str, password: str, addr: str = "0.0.0.0:5000"):
         """
         Initializes a Client object.
 
@@ -15,7 +17,7 @@ class Client:
             password (str): The password for the team.
             server_url (str, optional): The URL of the competition server. Defaults to "http://localhost:5000".
         """
-        self.__URL = server_url
+        self.__URL = "http://" + addr
         self.__team_username = team_username
         self.__password = password
         
@@ -26,8 +28,6 @@ class Client:
         self.__LOGIN_URL = "/api/giris"
         self.__KAMIKAZE_INFO_URL = "/api/kamikaze_bilgisi"
         self.__QR_COORDS_URL = "/api/qr_koordinati"
-        
-        self.__status_history = []
         
         # Initialize variables to communicate with the server
         self.__serverClock = {}
@@ -48,11 +48,12 @@ class Client:
         loaded = json.loads(data)
         req = requests.post(self.__URL + self.__TELEMETRY_INFO_URL, json=loaded)
         
-        self.__status_history.append(req.status_code)
         self.__others_telemetry_info = req.json()["konumBilgileri"]
         self.__serverClock = req.json()["sunucusaati"]
         
         req.close()
+        
+        return req.status_code
         
     def sendLockingInfo(self):
         """
@@ -62,9 +63,9 @@ class Client:
         loaded = json.loads(data)
         req = requests.post(self.__URL + self.__LOCKING_INFO_URL, json=loaded)
         
-        self.__status_history.append(req.status_code)
-        
         req.close()
+        
+        return req.status_code
         
     def login(self, team_username: str = None, password: str = None):
         """
@@ -89,14 +90,14 @@ class Client:
         loaded = json.loads(data)
         req = requests.post(self.__URL + self.__LOGIN_URL, json=loaded)
         
-        self.__status_history.append(req.status_code)
-        
         try:
             self.__team_num = req.json()["takim_numarasi"]
         except:
             self.__team_num = 0
         
         req.close()
+        
+        return req.status_code
         
     def sendKamikazeInfo(self):
         """
@@ -106,9 +107,9 @@ class Client:
         loaded = json.loads(data)
         req = requests.post(self.__URL + self.__KAMIKAZE_INFO_URL, json=loaded)
         
-        self.__status_history.append(req.status_code)
-        
         req.close()
+        
+        return req.status_code
         
     def requestKamikazeQRCoords(self):
         """
@@ -116,12 +117,12 @@ class Client:
         """
         req = requests.get(self.__URL + self.__QR_COORDS_URL)
         
-        self.__status_history.append(req.status_code)
-        
         if req.status_code == 200:
             self.__qrCoords = req.json()
         
         req.close()
+        
+        return req.status_code
         
     def requestServerClock(self):
         """
@@ -129,12 +130,12 @@ class Client:
         """
         req = requests.get(self.__URL + self.__SERVER_CLOCK_URL)
         
-        self.__status_history.append(req.status_code)
-        
         if req.status_code == 200:
             self.__serverClock = json.loads(json.dumps(req.json()))
         
         req.close()
+        
+        return req.status_code
         
     def readJsonFile(self, file_path: str):
         """
@@ -148,6 +149,22 @@ class Client:
         """
         with open(file_path, "r") as file:
             return json.load(file)
+        
+    def writeJsonFile(self, file_path: str, data: dict, createPath: bool = True):
+        """
+        Writes a JSON file.
+
+        Args:
+            file_path (str): The path of the JSON file.
+            data (dict): The data to be written to the JSON file.
+            createPath (bool, optional): If True, the path will be created if it does not exist. Defaults to True.
+        """
+        if createPath:
+            # Create the parent directories if they do not exist
+            os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        
+        with open(file_path, "w") as file:
+            json.dump(data, file)
         
     def set_telemetryInfo(self, telemetry_info: dict):
         """
@@ -203,7 +220,7 @@ class Client:
         """
         return self.__team_num
     
-    def get_QRCoords(self):
+    def get_kamikazeQrCoords(self):
         """
         Returns the QR coordinates.
 
@@ -211,16 +228,4 @@ class Client:
             dict: The QR coordinates.
         """
         return self.__qrCoords
-    
-    def get_statusCode(self, index: int = -1):
-        """
-        Returns the status code of specified index. If no index is provided, the status code of the last request will be returned.
-        
-        Args:
-            index (int, optional): The index of the status code to be returned. Defaults to -1.
-        
-        Returns:
-            int: The status code of the last request.
-        """
-        return self.__status_history[index]
     

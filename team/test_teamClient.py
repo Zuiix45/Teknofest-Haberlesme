@@ -1,47 +1,43 @@
 import unittest
+import randomDataGenerator as rdg
 from teamClient import Client
 
-team = Client("takimkadi", "takimsifresi")
+addr = input("Teknofest Deneme Sunucusu adresini girin: ")
+client = Client("takimkadi", "takimsifresi", addr)
+outputs_path = "./team/outputs/"
 
 class TestClient(unittest.TestCase):
     def test_login(self):
-        team.login()
-        self.assertEqual(team.get_teamNum(), 1)
-        self.assertEqual(team.get_statusCode(), 200)
+        self.assertEqual(client.login(), 200)
+        client.writeJsonFile(outputs_path + "team_number.json", client.get_teamNum())
     
     def test_requestServerClock(self):
-        team.requestServerClock()
-        self.assertEqual(team.get_serverClock(), team.readJsonFile("example_data/server_clock.json"))
-        self.assertEqual(team.get_statusCode(), 200)
+        self.assertEqual(client.requestServerClock(), 200)
+        client.writeJsonFile(outputs_path + "server_clock.json", client.get_serverClock())
         
-    def test_telemetryThread(self):
-        telemetry_info = team.readJsonFile("example_data/telemetry_info.json")
-        others_telemetry_info = team.readJsonFile("example_data/other_teams_telemetry.json")["konumBilgileri"]
-        server_clock = team.readJsonFile("example_data/other_teams_telemetry.json")["sunucusaati"]
+    def test_telemetryInfo(self):
+        telemetry_info = rdg.generateRandomTelemetryInfo(client.get_teamNum())
         
-        team.set_telemetryInfo(telemetry_info)
-        team.sendTelemetryInfo()
+        client.set_telemetryInfo(telemetry_info)
         
         self.maxDiff = None # to see the whole diff
         
-        self.assertEqual(team.get_othersTelemetryInfo(), others_telemetry_info)
-        self.assertEqual(team.get_serverClock(), server_clock)
-        self.assertEqual(team.get_statusCode(), 200)
+        self.assertEqual(client.sendTelemetryInfo(), 200)
+        
+        client.writeJsonFile(outputs_path + "other_teams_telemetry_info.json", client.get_othersTelemetryInfo())
+        client.writeJsonFile(outputs_path + "server_clock.json", client.get_serverClock())
     
     def test_lockingInfo(self):
-        team.set_lockingInfo(team.readJsonFile("example_data/locking_info.json"))
-        team.sendLockingInfo()
-        self.assertEqual(team.get_statusCode(), 200)
+        client.set_lockingInfo(rdg.generateRandomLockingInfo())
+        self.assertEqual(client.sendLockingInfo(), 200)
        
     def test_kamikazeInfo(self):
-        team.set_kamikazeInfo(team.readJsonFile("example_data/kamikaze_info.json"))
-        team.sendKamikazeInfo()
-        self.assertEqual(team.get_statusCode(), 200)
+        client.set_kamikazeInfo(rdg.generateRandomKamikazeInfo())
+        self.assertEqual(client.sendKamikazeInfo(), 200)
     
     def test_requestKamikazeQRCoords(self):
-        team.requestKamikazeQRCoords()
-        self.assertEqual(team.get_QRCoords(), team.readJsonFile("example_data/qr_coords.json"))
-        self.assertEqual(team.get_statusCode(), 200)
+        self.assertEqual(client.requestKamikazeQRCoords(), 200)
+        client.writeJsonFile(outputs_path + "kamikaze_qr_coords.json", client.get_kamikazeQrCoords())
 
 if __name__ == '__main__':
     unittest.main()

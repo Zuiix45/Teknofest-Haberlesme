@@ -62,19 +62,19 @@ team.sendTelemetryInfo()
 Client class'ını test edebilmek için yapılmıştır. Sunucu için NodeJS, API için expressjs kullanılmıştır. Yarışma sunucusunun benzeridir, aynı API'ı sunar. Sunucuyu çalıştırmak için gerekli modüller yüklenmelidir. Modüllerin yüklenmesi için aşağıdaki terminal komutları kullanılabilir.
 
 ```bash
-cd test_server
+cd ./server
 npm ci
 ```
 
 Sunucuyu çalıştırmak için, aşağıdaki komutlar kullanılabilir.
 ```bash
-cd test_server
+cd ./server
 node .
 ```
 veya
 ```bash
-cd test_server
-node app.js
+cd ./server
+node bin/www
 ```
 ## Entegrasyon
 teamClient.py dosyasının kopyalanıp projeye aktarılması yeterlidir. Ardından import edilebilir.
